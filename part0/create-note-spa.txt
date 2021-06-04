@@ -1,0 +1,14 @@
+title Create Note
+
+actor user
+
+user->Browser: type note into textbox
+user->Browser: click submit button
+
+note over Browser:
+create new note object from text content
+and timestamp, push new note to list, reset
+textbox, reload notes client-side notes list
+end note
+Browser->Server: POST note object to /new_note_spa endpoint
+Server->Browser: respond with 201 status code
