@@ -1,0 +1,28 @@
+title Access SPA
+
+actor user
+
+user->Browser: enter SPA URL
+
+Browser->Server: GET /spa
+Server->Browser: return HTML code
+Browser->Server: GET /main.css
+Server->Browser: return stylesheet
+Browser->Server: GET /spa.js
+Server->Browser: return javascript code to execute
+
+
+note over Browser:
+start executing js,
+get json data with AJAX
+end note
+Browser->Server: GET /data.json
+Server->Browser: return json of notes to display
+
+note over Browser:
+execute callback function
+to render notes
+end note
+
+Browser->Server: GET /favicon.ico
+Server->Browser: return icon
