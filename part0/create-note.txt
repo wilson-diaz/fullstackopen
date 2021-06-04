@@ -16,4 +16,5 @@ Server-->Browser: send 302 FOUND to redirect browser to /notes
 Browser->Server: GET /notes page again...
 note over Browser:
 reloads page to see new notes
+using updated list from server
 end note
