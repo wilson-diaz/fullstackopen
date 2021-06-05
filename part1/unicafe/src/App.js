@@ -6,6 +6,15 @@ const Button = ({btnText, handleClick}) => (
   </button>
 )
 
+const Feedback = ({btnHandler}) => (
+    <>
+      <h2>give feedback</h2>
+      <Button btnText={"good"} handleClick={btnHandler(1)} />
+      <Button btnText={"neutral"} handleClick={btnHandler(0)} />
+      <Button btnText={"bad"} handleClick={btnHandler(-1)} />
+    </>
+)
+
 const Statistics = ({good, neutral, bad}) => {
   const total = good + neutral + bad
   return (
@@ -36,17 +45,16 @@ const App = () => {
     }
   }
 
+  if (good + neutral + bad === 0) {
+    return (<Feedback btnHandler={giveFeedback} />)
+  }
+
   return (
     <>
-      <h2>give feedback</h2>
-      <Button btnText={"good"} handleClick={giveFeedback(1)} />
-      <Button btnText={"neutral"} handleClick={giveFeedback(0)} />
-      <Button btnText={"bad"} handleClick={giveFeedback(-1)} />
-
+      <Feedback btnHandler={giveFeedback} />
       <Statistics good={good} neutral={neutral} bad={bad} /> 
     </>
   )
-
 }
 
 export default App
