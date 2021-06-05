@@ -15,17 +15,21 @@ const Feedback = ({btnHandler}) => (
     </>
 )
 
+const Statistic = ({statText, statValue}) => (
+  <p>{statText} {statValue}</p>
+)
+
 const Statistics = ({good, neutral, bad}) => {
   const total = good + neutral + bad
   return (
     <>
         <h2>statistics</h2>
-        <p>good {good}</p>
-        <p>neutral {neutral}</p>
-        <p>bad {bad}</p>
-        <p>all {total}</p>
-        <p>average {(good - bad) / total || 0}</p>
-        <p>positive {good / total || 0}</p>
+        <Statistic statText={"good"} statValue={good} />
+        <Statistic statText={"neutral"} statValue={neutral} />
+        <Statistic statText={"bad"} statValue={bad} />
+        <Statistic statText={"all"} statValue={total} />
+        <Statistic statText={"average"} statValue={(good - bad) / total || 0} />
+        <Statistic statText={"positive"} statValue={((good / total || 0) * 100) + "%"} />
     </> 
    )
 }
