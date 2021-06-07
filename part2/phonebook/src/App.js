@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
-
-const Filter = ({newFilter, handleNewFilterChange}) => {
-  return (
-    <p>filter shown with <input value={newFilter} onChange={handleNewFilterChange} /></p>
-  )
-}
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Numbers from './components/Numbers'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -17,6 +14,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('') 
 
+  // filter using case-insensitive input
   const personsToShow = newFilter === ''
     ? persons
     : persons.filter(person => person.name.toLowerCase().indexOf(newFilter.toLowerCase()) !== -1)
@@ -54,19 +52,12 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter newFilter={newFilter} handleNewFilterChange={handleNewFilterChange} />
-      <form>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit" onClick={addPerson}>add</button>
-        </div>
-      </form>
+      
+      <h2>Add new person</h2>
+      <PersonForm newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} addPerson={addPerson} />
+
       <h2>Numbers</h2>
-      {personsToShow.map(p => <p key={p.name}>{p.name} {p.number}</p>)}
+      <Numbers personsToShow={personsToShow} />
     </div>
   )
 }
