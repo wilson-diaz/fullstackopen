@@ -1,30 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 
-const SearchField = ({searchName, handleSearch}) => (
-  <p>find countries <input value={searchName} onChange={handleSearch} /></p>
-)
-
-const CountriesList = ({list}) => (
-  <ul>
-    {list.map(c => <li key={c.numericCode}>{c.name}</li>)}
-  </ul>
-)
-
-const Country = ({country}) => (
-  <div>
-    <h2>{country.name}</h2>
-    <ul>
-      <li>capital: {country.capital}</li>
-      <li>population: {country.population}</li>
-    </ul>
-    <h3>languages</h3>
-    <ul>
-      {country.languages.map(lang => <li key={lang.iso639_1}>{lang.name}</li>)}
-    </ul>
-    <img src={country.flag} alt="country flag" width="50%" />
-  </div>
-)
+import SearchField from './components/SearchField'
+import CountryList from './components/CountryList'
+import Country from './components/Country'
 
 const App = () => {
   const [countries, setCountries] = useState([])
@@ -65,7 +44,7 @@ const App = () => {
   return (
     <>
       <SearchField searchName={searchName} handleSearch={handleSearch} />
-      <CountriesList list={countriesToShow} />
+      <CountryList list={countriesToShow} />
     </>
   )
 }
