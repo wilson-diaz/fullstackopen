@@ -8,6 +8,7 @@ import Country from './components/Country'
 const App = () => {
   const [countries, setCountries] = useState([])
   const [searchName, setSearchName] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   useEffect(() => {
     axios
@@ -16,35 +17,32 @@ const App = () => {
   }, [])
 
   const countriesToShow = countries.filter(c => c.name.toLowerCase().indexOf(searchName.toLowerCase()) !== -1)
-  const handleSearch = (e) => setSearchName(e.target.value)
+  const handleSearch = (e) => {
+    setSearchName(e.target.value)
+    setSelectedCountry(null)
+  }
 
-  if (countriesToShow.length > 10) {
-    return (
-      <>
-        <SearchField searchName={searchName} handleSearch={handleSearch} />
-        <p>too many matches, please refine search</p>
-      </>
-    )
+  const handleClick = (c) => () => {
+    setSelectedCountry(c)
+  }
+
+  let pageBody;
+  if (selectedCountry) {
+    pageBody = <Country country={selectedCountry} />
+  } else if (countriesToShow.length > 10) {
+    pageBody = <p>too many matches, please refine search</p>
   } else if (countriesToShow.length === 0) {
-    return (
-      <>
-        <SearchField searchName={searchName} handleSearch={handleSearch} />
-        <p>no matches, please try another search</p>
-      </>
-    )
+    pageBody = <p>no matches, please try another search</p>
   } else if (countriesToShow.length === 1) {
-    return (
-      <>
-        <SearchField searchName={searchName} handleSearch={handleSearch} />
-        <Country country={countriesToShow[0]} />
-      </>
-    )
+    pageBody = <Country country={countriesToShow[0]} />
+  } else if (countriesToShow) {
+    pageBody = <CountryList list={countriesToShow} handleClick={handleClick} />
   }
 
   return (
     <>
       <SearchField searchName={searchName} handleSearch={handleSearch} />
-      <CountryList list={countriesToShow} />
+      {pageBody}
     </>
   )
 }
