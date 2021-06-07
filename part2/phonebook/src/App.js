@@ -8,6 +8,13 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+
+    // check uniqueness
+    if (persons.map(p => p.name).includes(newName)) {
+      alert(`${newName} has already been added`)
+      return
+    }
+
     const newPerson = {
       name: newName
     }
