@@ -23,7 +23,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>Anecdaote of the day</h2>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]}</p>
       <p>has {points[selected]} votes</p>
       <button onClick={vote}>vote</button>
