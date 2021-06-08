@@ -50,6 +50,21 @@ const App = () => {
     setNewNumber('')
   }
 
+  const handleDelete = (id) => () => {
+    if (!window.confirm("are you sure you want to delete this person?")) { return }
+
+    personService
+      .deletePerson(id)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+        alert('error: this person has already been deleted')
+      })
+    setPersons(persons.filter(p => p.id !== id))
+  }
+
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleNewFilterChange = (event) => setNewFilter(event.target.value)
@@ -64,7 +79,7 @@ const App = () => {
       <PersonForm newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} addPerson={addPerson} />
 
       <h2>Numbers</h2>
-      <Numbers personsToShow={personsToShow} />
+      <Numbers personsToShow={personsToShow} handleDelete={handleDelete} />
     </div>
   )
 }
