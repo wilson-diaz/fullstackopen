@@ -1,8 +1,13 @@
 import React from 'react'
 
-const Numbers = ({ personsToShow }) => (
+const Numbers = ({ personsToShow, handleDelete }) => (
     <>
-        {personsToShow.map(p => <p key={p.name}>{p.name} {p.number}</p>)}
+        {personsToShow.map(p => (
+            <p key={p.name}>
+                {p.name} {p.number} 
+                <button onClick={handleDelete(p.id)}>delete</button>
+            </p>
+        ))}
     </>
 )
 
