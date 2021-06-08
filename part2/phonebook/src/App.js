@@ -32,19 +32,35 @@ const App = () => {
     }
 
     // check uniqueness
-    if (persons.map(p => p.name).includes(newName)) {
-      alert(`${newName} has already been added`)
-      return
+    const duplicate = persons.find(p => p.name === newName)
+    if (duplicate) {
+      if (duplicate.number !== newNumber) {
+        if (window.confirm(`${newName} has already been added with a different number, would you like to replace their phone number?`)) {
+          personService.updatePhone(duplicate.id, {...duplicate, number: newNumber})  
+            .then(data => {
+              setPersons(persons.map(p => p.id !== duplicate.id ? p : data))
+            })
+            .catch(error => {
+              alert('error updating this person. they must have been deleted')
+              setPersons(persons.filter(p => p !== duplicate.id))
+            })
+        } else {
+          return
+        }
+      } else {
+        alert(`${newName} has already been added with this number. enter a different one to update it.`) 
+        return
+      }
+    } else {
+        const newPerson = {
+          name: newName,
+          number: newNumber
+        }
+    
+        personService
+          .create(newPerson)
+          .then(data => setPersons(persons.concat(data)))
     }
-
-    const newPerson = {
-      name: newName,
-      number: newNumber
-    }
-
-    personService
-      .create(newPerson)
-      .then(data => setPersons(persons.concat(data)))
 
     setNewName('')
     setNewNumber('')
