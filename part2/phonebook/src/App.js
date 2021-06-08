@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Numbers from './components/Numbers'
+
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,9 +13,8 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('') 
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => setPersons(response.data))
+    personService.getAll()
+      .then(initialPersons => setPersons(initialPersons))
   }, [])
   
   // filter using case-insensitive input
@@ -41,7 +41,11 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    setPersons(persons.concat(newPerson))
+
+    personService
+      .create(newPerson)
+      .then(data => setPersons(persons.concat(data)))
+
     setNewName('')
     setNewNumber('')
   }
