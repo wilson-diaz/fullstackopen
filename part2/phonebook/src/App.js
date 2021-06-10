@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Numbers from './components/Numbers'
+import Notification from './components/Notification'
 
 import personService from './services/persons'
 
@@ -10,7 +11,10 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [newFilter, setNewFilter] = useState('') 
+  const [newFilter, setNewFilter] = useState('')
+
+  const [message, setMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     personService.getAll()
@@ -27,7 +31,11 @@ const App = () => {
 
     // check both fields
     if (newName === '' || newNumber === '') {
-      alert('please fill both fields')
+      setMessage(`please fill in both fields`)
+      setIsError(true)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
       return
     }
 
@@ -39,16 +47,31 @@ const App = () => {
           personService.updatePhone(duplicate.id, {...duplicate, number: newNumber})  
             .then(data => {
               setPersons(persons.map(p => p.id !== duplicate.id ? p : data))
+
+              setMessage(`successfully updated ${newName}'s number to ${newNumber}`)
+              setIsError(false)
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
             })
             .catch(error => {
-              alert('error updating this person. they must have been deleted')
+              setMessage(`error updating ${newName}. they must have been deleted from the server.`)
+              setIsError(true)
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
               setPersons(persons.filter(p => p !== duplicate.id))
             })
         } else {
+          // don't replace number
           return
         }
       } else {
-        alert(`${newName} has already been added with this number. enter a different one to update it.`) 
+        setMessage(`${newName} has already been added with this number. enter a different one to update it.`)
+        setIsError(true)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
         return
       }
     } else {
@@ -60,6 +83,12 @@ const App = () => {
         personService
           .create(newPerson)
           .then(data => setPersons(persons.concat(data)))
+        
+        setMessage(`successfully added ${newName}`)
+        setIsError(false)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
     }
 
     setNewName('')
@@ -69,15 +98,25 @@ const App = () => {
   const handleDelete = (id) => () => {
     if (!window.confirm("are you sure you want to delete this person?")) { return }
 
+    const nameToDelete = persons.find(p => p.id === id).name
+
     personService
       .deletePerson(id)
       .then(response => {
-        console.log(response)
+        setMessage(`successfully deleted ${nameToDelete}`)
+        setIsError(false)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
       .catch(error => {
-        console.log(error)
-        alert('error: this person has already been deleted')
+        setMessage(`info of ${nameToDelete} has already been deleted from server`)
+        setIsError(true)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
+
     setPersons(persons.filter(p => p.id !== id))
   }
 
@@ -89,6 +128,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification isError={isError} message={message} />
       <Filter newFilter={newFilter} handleNewFilterChange={handleNewFilterChange} />
       
       <h2>Add new person</h2>
