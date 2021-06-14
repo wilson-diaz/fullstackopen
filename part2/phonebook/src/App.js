@@ -55,7 +55,8 @@ const App = () => {
               }, 5000)
             })
             .catch(error => {
-              setMessage(`error updating ${newName}. they must have been deleted from the server.`)
+              console.log(error.response.data)
+              setMessage(error.response.data.error)
               setIsError(true)
               setTimeout(() => {
                 setMessage(null)
@@ -75,20 +76,29 @@ const App = () => {
         return
       }
     } else {
-        const newPerson = {
-          name: newName,
-          number: newNumber
-        }
+      const newPerson = {
+        name: newName,
+        number: newNumber
+      }
     
-        personService
-          .create(newPerson)
-          .then(data => setPersons(persons.concat(data)))
-        
-        setMessage(`successfully added ${newName}`)
-        setIsError(false)
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+      personService
+        .create(newPerson)
+        .then(data => {
+          setPersons(persons.concat(data))
+          setMessage(`successfully added ${newName}`)
+          setIsError(false)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          console.log(error.response.data)
+          setMessage(error.response.data.error)
+          setIsError(true)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
     }
 
     setNewName('')
@@ -110,7 +120,8 @@ const App = () => {
         }, 5000)
       })
       .catch(error => {
-        setMessage(`info of ${nameToDelete} has already been deleted from server`)
+        console.log(error.response.data)
+        setMessage(error.response.data.error)
         setIsError(true)
         setTimeout(() => {
           setMessage(null)
